@@ -55,4 +55,21 @@ public class ArticleServiceTest {
         Assert.assertTrue(article.isPresent()); //Article("Mon 12 article" , " Contenu 12 article");
         Assert.assertEquals( " Contenu 12 article", article.orElseThrow().getContent());
     }
+
+
+    @Test
+    public void shouldFindOneArticlesContaininWords() {
+        Article article1 = new Article("Recette1" , "Mayo Ketchup et Frites tomate concombre ciboulette");
+        Article article2 = new Article("Recette2" , "Quelques Tomates, du concombre mais pas trop, de la mayonnaise");
+        Article article3 = new Article("Recette3" , "Du pop corn avec du caramel et du  Ketchup et Frites");
+        Article article4 = new Article("Recette4" , "Des Concombre à la tomate saupoudrés de mayonnaise à la ciboulette sans  Ketchup et Frites");
+
+        Mockito.when(articleRepository.findAll()).thenReturn(List.of(article1 , article2 , article3, article4));
+
+        List<Article> articles = articleService.findArticlesContaininWords(List.of("tomate" , "concombre" , "ciboulette"));
+        Assert.assertEquals(2 , articles.size() );
+        Assert.assertTrue(articles.contains(article1) );
+        Assert.assertTrue(articles.contains(article4) );
+
+    }
 }

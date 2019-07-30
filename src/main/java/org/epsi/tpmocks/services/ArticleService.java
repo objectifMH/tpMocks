@@ -10,8 +10,11 @@ import org.epsi.tpmocks.entities.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -33,5 +36,28 @@ public class ArticleService  {
     }
 
 
-    
+    public List<Article> findArticlesContaininWords(List<String> wordsToMatch) {
+      /*  List<Article> articles = articleRepository.findAll();
+        List<Article> resArticles = new ArrayList<>();
+
+        for ( Article article : articles ) {
+            boolean match = true ;
+            for ( String wordToMatch : wordsToMatch) {
+                if ( !article.getContent().toLowerCase().contains(wordToMatch.toLowerCase()))
+                {
+                    match = false;
+                }
+            }
+            if ( match )
+            {
+                resArticles.add(article);
+            }
+        }*/
+      
+      List<Article> articles = articleRepository.findAll();
+      return articles.stream().filter(
+              article -> wordsToMatch.stream().allMatch(
+              wordToMatch -> article.getContent().toLowerCase().contains(wordToMatch.toLowerCase()))).collect(
+                      Collectors.toList());
+    }
 }
